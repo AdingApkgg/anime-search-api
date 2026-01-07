@@ -301,6 +301,19 @@ anime-search-api/
 |------|--------|------|
 | `PORT` | 3000 | 服务端口 |
 | `RUST_LOG` | info | 日志级别 |
+| `AUTO_UPDATE` | 0 | 启动时自动更新规则 (1=启用) |
+| `BANGUMI_ACCESS_TOKEN` | - | Bangumi API 默认 access token |
+
+### Bangumi 认证说明
+
+需要认证的 Bangumi API (如收藏管理) 支持两种方式提供 token：
+
+1. **客户端传入** - 请求头 `Authorization: Bearer <token>`
+2. **服务端默认** - 环境变量 `BANGUMI_ACCESS_TOKEN`
+
+优先使用客户端传入的 token，如未提供则使用服务端配置的默认 token。
+
+获取 token: https://next.bgm.tv/demo/access-token
 
 ## 🐳 容器部署
 

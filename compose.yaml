@@ -13,6 +13,9 @@ services:
       - PORT=3000
       - RUST_LOG=info
       - AUTO_UPDATE=0
+      # Bangumi API 默认 access token (可选，用于需要认证的 API)
+      # 获取: https://next.bgm.tv/demo/access-token
+      # - BANGUMI_ACCESS_TOKEN=your_token_here
     healthcheck:
       test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/health"]
       interval: 30s

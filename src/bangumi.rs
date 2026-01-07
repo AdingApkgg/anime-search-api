@@ -16,6 +16,29 @@ const APP_ID: &str = "bgm5356695eacc14314f";
 #[allow(dead_code)]
 const APP_SECRET: &str = "af886557f6083a06d0ba9614f28afee5";
 
+/// 获取有效的 access token
+/// 优先使用用户提供的 token，否则使用服务端配置的默认 token
+pub fn get_effective_token(user_token: Option<&str>) -> Option<&str> {
+    // 优先使用用户提供的 token
+    if let Some(token) = user_token {
+        if !token.is_empty() {
+            return Some(token);
+        }
+    }
+    
+    // 尝试从环境变量获取服务端默认 token
+    get_server_token()
+}
+
+/// 获取服务端配置的默认 token (从环境变量 BANGUMI_ACCESS_TOKEN)
+fn get_server_token() -> Option<&'static str> {
+    use once_cell::sync::Lazy;
+    static SERVER_TOKEN: Lazy<Option<String>> = Lazy::new(|| {
+        std::env::var("BANGUMI_ACCESS_TOKEN").ok().filter(|s| !s.is_empty())
+    });
+    SERVER_TOKEN.as_deref()
+}
+
 // ============================================================================
 // 公共类型定义
 // ============================================================================

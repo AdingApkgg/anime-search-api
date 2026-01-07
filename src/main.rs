@@ -343,13 +343,15 @@ async fn bangumi_calendar_handler() -> impl IntoResponse {
 // Bangumi v0 API 处理函数
 // ============================================================================
 
-/// 从请求头提取 Bearer Token
+/// 从请求头提取 Bearer Token (如果用户未提供则使用服务端默认 token)
 fn extract_token(headers: &HeaderMap) -> Option<String> {
-    headers
+    let user_token = headers
         .get("Authorization")
         .and_then(|v| v.to_str().ok())
         .and_then(|s| s.strip_prefix("Bearer "))
-        .map(|s| s.to_string())
+        .filter(|s| !s.is_empty());
+    
+    bangumi::get_effective_token(user_token).map(|s| s.to_string())
 }
 
 /// 查询参数
