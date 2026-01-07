@@ -16,6 +16,7 @@
 
 | 类别 | 技术 |
 |------|------|
+| 语言 | Rust 1.92+ |
 | 框架 | Axum 0.8 |
 | 运行时 | Tokio |
 | HTTP 客户端 | Reqwest |
@@ -323,13 +324,23 @@ anime-search-api/
 ### Podman Compose (推荐)
 
 ```bash
+# 构建并启动
+podman compose up -d --build
+
+# 仅启动 (已构建)
 podman compose up -d
+
+# 查看日志
+podman compose logs -f
+
+# 停止
+podman compose down
 ```
 
 ### Docker Compose
 
 ```bash
-docker compose up -d
+docker compose up -d --build
 ```
 
 ### 手动构建
@@ -337,11 +348,11 @@ docker compose up -d
 ```bash
 # Podman
 podman build -t anime-search-api .
-podman run -d -p 3000:3000 -v ./rules:/app/rules:ro anime-search-api
+podman run -d -p 3000:3000 -v ./rules:/app/rules:ro --name anime-search-api anime-search-api
 
 # Docker
 docker build -t anime-search-api .
-docker run -d -p 3000:3000 -v ./rules:/app/rules:ro anime-search-api
+docker run -d -p 3000:3000 -v ./rules:/app/rules:ro --name anime-search-api anime-search-api
 ```
 
 ## 🔄 Nginx 反向代理

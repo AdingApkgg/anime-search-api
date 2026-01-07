@@ -1,5 +1,5 @@
 # 构建阶段
-FROM rust:1.83-alpine AS builder
+FROM rust:1.92-alpine AS builder
 
 RUN apk add --no-cache musl-dev openssl-dev openssl-libs-static pkgconfig libxml2-dev
 
@@ -25,3 +25,4 @@ ENV PORT=3000
 EXPOSE 3000
 
 CMD ["./anime-search-api"]
+
