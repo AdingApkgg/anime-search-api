@@ -302,11 +302,30 @@ anime-search-api/
 | `PORT` | 3000 | 服务端口 |
 | `RUST_LOG` | info | 日志级别 |
 
-## 🐳 Docker
+## 🐳 容器部署
+
+### Podman Compose (推荐)
 
 ```bash
+podman compose up -d
+```
+
+### Docker Compose
+
+```bash
+docker compose up -d
+```
+
+### 手动构建
+
+```bash
+# Podman
+podman build -t anime-search-api .
+podman run -d -p 3000:3000 -v ./rules:/app/rules:ro anime-search-api
+
+# Docker
 docker build -t anime-search-api .
-docker run -p 3000:3000 -v ./rules:/app/rules anime-search-api
+docker run -d -p 3000:3000 -v ./rules:/app/rules:ro anime-search-api
 ```
 
 ## 🙏 致谢

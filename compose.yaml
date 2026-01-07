@@ -1,0 +1,22 @@
+services:
+  anime-search-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: anime-search-api
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./rules:/app/rules:ro
+    environment:
+      - PORT=3000
+      - RUST_LOG=info
+      - AUTO_UPDATE=0
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
