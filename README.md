@@ -278,8 +278,6 @@ curl -o rules/gugu3.json https://raw.githubusercontent.com/Predidit/KazumiRules/
 ```
 anime-search-api/
 ├── Cargo.toml
-├── Dockerfile
-├── compose.yaml
 ├── LICENSE
 ├── README.md
 ├── rules/              # 规则文件目录 (兼容 Kazumi)
@@ -318,42 +316,6 @@ anime-search-api/
 优先使用客户端传入的 token，如未提供则使用服务端配置的默认 token。
 
 获取 token: https://next.bgm.tv/demo/access-token
-
-## 🐳 容器部署
-
-### Podman Compose (推荐)
-
-```bash
-# 构建并启动
-podman compose up -d --build
-
-# 仅启动 (已构建)
-podman compose up -d
-
-# 查看日志
-podman compose logs -f
-
-# 停止
-podman compose down
-```
-
-### Docker Compose
-
-```bash
-docker compose up -d --build
-```
-
-### 手动构建
-
-```bash
-# Podman
-podman build -t anime-search-api .
-podman run -d -p 3000:3000 -v ./rules:/app/rules:ro --name anime-search-api anime-search-api
-
-# Docker
-docker build -t anime-search-api .
-docker run -d -p 3000:3000 -v ./rules:/app/rules:ro --name anime-search-api anime-search-api
-```
 
 ## 🔄 Nginx 反向代理
 
