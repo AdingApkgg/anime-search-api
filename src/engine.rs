@@ -132,18 +132,18 @@ fn parse_episodes(rule: &Rule, html: &str, base_url: &str) -> anyhow::Result<Vec
 
         // 在播放源内查找章节
         for ep_element in road_element.select(&result_selector) {
-            // 获取集数名称
+                // 获取集数名称
             let name = get_element_text(&ep_element).trim().to_string();
-            
-            // 获取播放链接
+                
+                // 获取播放链接
             let href = ep_element.value().attr("href").unwrap_or_default().to_string();
-            
-            if name.is_empty() || href.is_empty() {
-                continue;
-            }
+                
+                if name.is_empty() || href.is_empty() {
+                    continue;
+                }
 
-            let url = normalize_url(&href, &url_base);
-            episodes.push(Episode { name, url });
+                let url = normalize_url(&href, &url_base);
+                episodes.push(Episode { name, url });
         }
 
         if !episodes.is_empty() {
@@ -246,8 +246,8 @@ fn apply_position_filter(index: usize, filter: &Option<PositionFilter>) -> bool 
     match filter {
         Some(PositionFilter::GreaterThan(n)) => index >= *n,
         None => true,
+        }
     }
-}
 
 /// 获取元素的文本内容
 fn get_element_text(element: &ElementRef) -> String {
