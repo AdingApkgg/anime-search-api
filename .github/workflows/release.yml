@@ -36,9 +36,9 @@ jobs:
           - target: aarch64-unknown-linux-musl
             os: ubuntu-latest
             cross: true
-          # macOS
+          # macOS (使用 Apple Silicon runner，原生 + 交叉编译)
           - target: x86_64-apple-darwin
-            os: macos-13
+            os: macos-14
             cross: false
           - target: aarch64-apple-darwin
             os: macos-14
