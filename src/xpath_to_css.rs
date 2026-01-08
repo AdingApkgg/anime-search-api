@@ -103,15 +103,15 @@ fn convert_xpath(xpath: &str) -> Result<(String, Option<PositionFilter>), String
 
     // 分割路径段
     let segments = split_xpath_segments(&xpath);
-    let mut css_parts = Vec::new();
+    let mut css = String::new();
 
-    for segment in segments {
-        let css_segment = convert_segment(&segment)?;
-        css_parts.push(css_segment);
+    for (index, segment) in segments.iter().enumerate() {
+        let css_segment = convert_segment(segment, index == 0)?;
+        css.push_str(&css_segment);
     }
 
-    // 组合 CSS 选择器
-    let css = css_parts.join(" ");
+    // 清理多余空格
+    let css = css.trim().to_string();
     
     Ok((css, position_filter))
 }
@@ -159,9 +159,17 @@ struct PathSegment {
 }
 
 /// 转换单个路径段
-fn convert_segment(segment: &PathSegment) -> Result<String, String> {
+fn convert_segment(segment: &PathSegment, is_first: bool) -> Result<String, String> {
     let mut element = segment.element.clone();
-    let combinator = if segment.is_descendant { "" } else { "> " };
+    
+    // 第一个段不需要组合符，后续段根据是否为后代选择决定
+    let combinator = if is_first {
+        ""
+    } else if segment.is_descendant {
+        " " // 后代选择器用空格
+    } else {
+        " > " // 子选择器用 >
+    };
 
     // 处理通配符 *
     if element == "*" || element.starts_with("*[") {
@@ -199,12 +207,8 @@ fn convert_segment(segment: &PathSegment) -> Result<String, String> {
         format!(":nth-of-type({})", &caps[1])
     }).to_string();
 
-    // 如果元素名为空（只有属性选择器），不加组合符
-    if element.starts_with('[') || element.starts_with('#') || element.starts_with('.') || element.starts_with(':') {
-        Ok(element)
-    } else {
-        Ok(format!("{}{}", combinator, element).trim().to_string())
-    }
+    // 组合结果
+    Ok(format!("{}{}", combinator, element))
 }
 
 #[cfg(test)]
