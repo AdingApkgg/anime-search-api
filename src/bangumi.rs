@@ -104,8 +104,11 @@ pub struct BangumiImages {
 /// 评分
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BangumiRating {
-    pub rank: i32,
+    #[serde(default)]
+    pub rank: Option<i32>,  // rank 可能在这里或在顶层 Subject.rank
+    #[serde(default)]
     pub total: i32,
+    #[serde(default)]
     pub score: f64,
     #[serde(default)]
     pub count: Option<BangumiRatingCount>,
@@ -611,8 +614,9 @@ impl From<BangumiSubject> for AnimeInfo {
             air_date: s.air_date,
             image: s.images.map(|i| i.medium).unwrap_or_default(),
             url: s.url,
-            score: s.rating.as_ref().map(|r| r.score),
-            rank: s.rating.map(|r| r.rank),
+            score: s.rating.as_ref().and_then(|r| if r.score > 0.0 { Some(r.score) } else { None }),
+            // 优先使用顶层 rank，回退到 rating.rank
+            rank: s.rank.or_else(|| s.rating.as_ref().and_then(|r| r.rank)),
         }
     }
 }
@@ -719,9 +723,10 @@ async fn delete_with_auth(url: &str, token: &str) -> anyhow::Result<()> {
 // ============================================================================
 
 /// 搜索动漫 (type=2)
+/// 使用 responseGroup=large 获取完整信息（评分、排名等）
 pub async fn search_anime(keyword: &str) -> anyhow::Result<BangumiSearchResult> {
     let url = format!(
-        "{}/search/subject/{}?type=2&responseGroup=small",
+        "{}/search/subject/{}?type=2&responseGroup=large",
         BANGUMI_API,
         urlencoding::encode(keyword)
     );
